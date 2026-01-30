@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <p className="read-the-docs">
-       CALENDAR LETS GO
+       CALENDAR LETS GOs
       </p>
     </>
   )

@@ -47,6 +47,7 @@ export default function EventModal({ selectedDate, onClose, onSave }: Props) {
           <option value="conference">Conference</option>
           <option value="reminder">Reminder</option>
           <option value="personal">Personal</option>
+          <option value="testing">Testing</option>
         </select>
 
         <input

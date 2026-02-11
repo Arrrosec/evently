@@ -6,7 +6,7 @@ export default function App() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-300 p-8">
       <Calendar events={events} setEvents={setEvents} />
     </div>
   );

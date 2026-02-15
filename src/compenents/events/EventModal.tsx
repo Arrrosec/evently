@@ -26,46 +26,58 @@ export default function EventModal({ selectedDate, onClose, onSave }: Props) {
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-white rounded-xl p-6 w-96 space-y-4 shadow-xl">
-        <h2 className="text-lg font-semibold">Add Event</h2>
+return (
+  <div
+    className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+    onClick={onClose} // close modal if user clicks outside
+  >
+    <div
+      className="bg-white rounded-xl p-6 w-96 space-y-4 shadow-xl z-50"
+      onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
+    >
+      <h2 className="text-lg font-semibold">Add Event</h2>
 
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
 
-        <select
-          className="w-full border p-2 rounded"
-          value={category}
-          onChange={(e) => setCategory(e.target.value as EventCategory)}
+      <select
+        className="w-full border p-2 rounded"
+        value={category}
+        onChange={(e) => setCategory(e.target.value as EventCategory)}
+      >
+        <option value="meeting">Meeting</option>
+        <option value="conference">Conference</option>
+        <option value="reminder">Reminder</option>
+        <option value="personal">Personal</option>
+      </select>
+
+      <input
+        className="w-full border p-2 rounded"
+        placeholder="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+      />
+
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={onClose}
+          className="px-3 py-1 bg-gray-200 rounded"
         >
-          <option value="meeting">Meeting</option>
-          <option value="conference">Conference</option>
-          <option value="reminder">Reminder</option>
-          <option value="personal">Personal</option>
-          <option value="testing">Testing</option>
-        </select>
-
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-3 py-1 bg-gray-200 rounded">
-            Cancel
-          </button>
-          <button onClick={handleSubmit} className="px-3 py-1 bg-blue-500 text-white rounded">
-            Save
-          </button>
-        </div>
+          Cancel
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="px-3 py-1 bg-blue-500 text-white rounded"
+        >
+          Save
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
+
 }

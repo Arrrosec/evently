@@ -25,7 +25,7 @@ export default function EventList({ events }: Props) {
   };
 
   return (
-    <div className="mt-6 p-4 bg-white shadow rounded-xl">
+    <div className=" p-4 bg-white shadow rounded-xl">
       <h3 className="text-lg font-semibold mb-2">Upcoming Events</h3>
       {sortedEvents.length === 0 ? (
         <p className="text-gray-500">No events yet.</p>

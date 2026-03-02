@@ -14,12 +14,22 @@ interface Props {
 export default function Calendar({ events, setEvents }: Props) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-  const fullCalendarEvents: any[] = events.map((e) => ({
-    id: e.id,
-    title: e.title,
-    start: e.date,
-    allDay: true,
-  }));
+const fullCalendarEvents: any[] = events.map((e) => ({
+  id: e.id,
+  title: e.title,
+  start: e.date,
+  allDay: true,
+  extendedProps: { category: e.category },
+  backgroundColor:
+    e.category === "meeting"
+      ? "#3B82F6" // blue
+      : e.category === "conference"
+      ? "#10B981" // green
+      : e.category === "reminder"
+      ? "#FBBF24" // yellow
+      : "#8B5CF6", // purple for personal
+  textColor: "#ffffff",
+}));
 
   const handleDateClick = (arg: any) => {
     setSelectedDate(arg.dateStr);

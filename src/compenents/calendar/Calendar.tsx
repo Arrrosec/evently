@@ -14,23 +14,38 @@ interface Props {
 export default function Calendar({ events, setEvents }: Props) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-const fullCalendarEvents: any[] = events.map((e) => ({
-  id: e.id,
-  title: e.title,
-  start: e.date,
-  allDay: true,
-  extendedProps: { category: e.category },
-  backgroundColor:
-    e.category === "meeting"
-      ? "#3B82F6" // blue
-      : e.category === "conference"
-      ? "#10B981" // green
-      : e.category === "reminder"
-      ? "#FBBF24" // yellow
-      : "#8B5CF6", // purple for personal
-  textColor: "#ffffff",
-}));
+const fullCalendarEvents: any[] = events.map((e) => {
+  let bgColor = "";
+  let textColor = "#ffffff";
 
+  switch (e.category) {
+    case "meeting":
+      bgColor = "#3B82F6"; // blue
+      break;
+    case "conference":
+      bgColor = "#10B981"; // green
+      break;
+    case "reminder":
+      bgColor = "#FBBF24"; // yellow
+      textColor = "#000000";
+      break;
+    case "personal":
+      bgColor = "#8B5CF6"; // purple
+      break;
+    default:
+      bgColor = "#3B82F6"; // fallback blue
+  }
+
+  return {
+    id: e.id,
+    title: e.title,
+    start: e.date,
+    allDay: true,
+    backgroundColor: bgColor,
+    textColor: textColor,
+    extendedProps: { category: e.category },
+  };
+});
   const handleDateClick = (arg: any) => {
     setSelectedDate(arg.dateStr);
   };
@@ -41,15 +56,15 @@ const fullCalendarEvents: any[] = events.map((e) => ({
 
   return (
     <div className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-4xl mx-auto">
-      <FullCalendar
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        events={fullCalendarEvents}
-        selectable={true}
-        dateClick={handleDateClick}
-        eventClick={handleEventClick}
-        height="auto"
-      />
+     <FullCalendar
+  plugins={[dayGridPlugin, interactionPlugin]}
+  initialView="dayGridMonth"
+  events={fullCalendarEvents}
+  selectable={true}
+  dateClick={handleDateClick}
+  eventClick={handleEventClick}
+  height="auto"
+/>
 
       {selectedDate && (
         <EventModal

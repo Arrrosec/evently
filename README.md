@@ -17,8 +17,7 @@ A clean, elegant event management app built with React, TypeScript, and Tailwind
 ---
 
 ## 🔗 Live Demo
-
-[→ View Live](evently-sable.vercel.app)
+[→ View Live](https://(evently-sable.vercel.app)
 
 ---
 

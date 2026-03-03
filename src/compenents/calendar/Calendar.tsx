@@ -1,5 +1,5 @@
 // src/components/calendar/Calendar.tsx
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -10,31 +10,57 @@ import type { CalendarEvent, EventCategory } from "../../types/Event";
 interface Props {
   events: CalendarEvent[];
   setEvents: React.Dispatch<React.SetStateAction<CalendarEvent[]>>;
+  filterCategory: EventCategory | "all";
+  addEventDate?: string | null;
+  onAddEventClose?: () => void;
 }
 
-export default function Calendar({ events, setEvents }: Props) {
+// Left-border accent style
+const CATEGORY_COLORS: Record<string, { accent: string; bg: string; text: string }> = {
+  meeting:    { accent: "#3b82f6", bg: "#eff6ff", text: "#1e40af" },
+  conference: { accent: "#22c55e", bg: "#f0fdf4", text: "#15803d" },
+  reminder:   { accent: "#f59e0b", bg: "#fffbeb", text: "#92400e" },
+  personal:   { accent: "#a855f7", bg: "#faf5ff", text: "#6b21a8" },
+};
+
+export default function Calendar({
+  events,
+  setEvents,
+  filterCategory,
+  addEventDate,
+  onAddEventClose,
+}: Props) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
-  const [filterCategory, setFilterCategory] = useState<EventCategory | "all">("all");
 
-  // Filter + map events for FullCalendar
+  useEffect(() => {
+    if (addEventDate) {
+      setSelectedDate(addEventDate);
+      setEditingEvent(null);
+    }
+  }, [addEventDate]);
+
   const fullCalendarEvents = useMemo(() => {
     return events
       .filter((e) => filterCategory === "all" || e.category === filterCategory)
-      .map((e) => ({
-        id: e.id,
-        title: e.title,
-        start: e.date,
-        allDay: true,
-        extendedProps: { category: e.category },
-      }));
+      .map((e) => {
+        const c = CATEGORY_COLORS[e.category] ?? { accent: "#94a3b8", bg: "#f8fafc", text: "#334155" };
+        return {
+          id: e.id,
+          title: e.title,
+          start: e.date,
+          allDay: true,
+          backgroundColor: c.bg,
+          borderColor: c.bg,
+          textColor: c.text,
+          extendedProps: { accent: c.accent },
+        };
+      });
   }, [events, filterCategory]);
 
-  // Filter + sort upcoming events for the EventList
   const upcomingEvents = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     return events
       .filter(
         (e) =>
@@ -46,7 +72,7 @@ export default function Calendar({ events, setEvents }: Props) {
 
   const handleDateClick = (arg: any) => {
     setSelectedDate(arg.dateStr);
-    setEditingEvent(null); // new event
+    setEditingEvent(null);
   };
 
   const handleEventClick = (arg: any) => {
@@ -57,85 +83,76 @@ export default function Calendar({ events, setEvents }: Props) {
     }
   };
 
+  const handleClose = () => {
+    setSelectedDate(null);
+    setEditingEvent(null);
+    onAddEventClose?.();
+  };
+
   const handleSave = (event: CalendarEvent) => {
     setEvents((prev) => {
       const exists = prev.find((e) => e.id === event.id);
-      if (exists) {
-        return prev.map((e) => (e.id === event.id ? event : e));
-      }
+      if (exists) return prev.map((e) => (e.id === event.id ? event : e));
       return [...prev, event];
     });
-    setSelectedDate(null);
-    setEditingEvent(null);
+    handleClose();
   };
 
   const handleDelete = (eventId: string) => {
     setEvents((prev) => prev.filter((e) => e.id !== eventId));
-    setSelectedDate(null);
-    setEditingEvent(null);
+    handleClose();
   };
 
   return (
     <div className="flex flex-col md:flex-row gap-6 w-full">
-      {/* Calendar Section */}
-      <div className="flex-1 bg-white shadow-xl rounded-2xl p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <label className="font-medium">Filter by category:</label>
-          <select
-            className="border p-1 rounded"
-            value={filterCategory}
-            onChange={(e) =>
-              setFilterCategory(e.target.value as EventCategory | "all")
-            }
-          >
-            <option value="all">All</option>
-            <option value="meeting">Meeting</option>
-            <option value="conference">Conference</option>
-            <option value="reminder">Reminder</option>
-            <option value="personal">Personal</option>
-          </select>
+      {/* Calendar */}
+      <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-6 min-w-0">
+        <div className="h-[600px] overflow-y-auto">
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            events={fullCalendarEvents}
+            selectable={true}
+            dateClick={handleDateClick}
+            eventClick={handleEventClick}
+            height="auto"
+            eventDidMount={(info) => {
+              const accent = info.event.extendedProps.accent;
+              info.el.style.borderLeft = `3px solid ${accent}`;
+              info.el.style.borderRadius = "5px";
+              info.el.style.fontSize = "0.75rem";
+              info.el.style.padding = "1px 5px";
+            }}
+          />
         </div>
-
-        <FullCalendar
-          plugins={[dayGridPlugin, interactionPlugin]}
-          initialView="dayGridMonth"
-          events={fullCalendarEvents}
-          selectable={true}
-          dateClick={handleDateClick}
-          eventClick={handleEventClick}
-          height="auto"
-          eventDidMount={(info) => {
-            const category = info.event.extendedProps.category;
-            if (category === "meeting") info.el.classList.add("bg-blue-500", "text-white");
-            else if (category === "conference") info.el.classList.add("bg-green-500", "text-white");
-            else if (category === "reminder") info.el.classList.add("bg-yellow-400", "text-black");
-            else if (category === "personal") info.el.classList.add("bg-purple-500", "text-white");
-          }}
-        />
 
         {selectedDate && (
           <EventModal
             selectedDate={selectedDate}
             editingEvent={editingEvent}
-            onClose={() => {
-              setSelectedDate(null);
-              setEditingEvent(null);
-            }}
+            onClose={handleClose}
             onSave={handleSave}
             onDelete={editingEvent ? () => handleDelete(editingEvent.id) : undefined}
           />
         )}
       </div>
 
-      {/* Upcoming Events List */}
-      <EventList
-        events={upcomingEvents}
-        onEdit={(event) => {
-          setEditingEvent(event);
-          setSelectedDate(event.date);
-        }}
-        onDelete={(id) => handleDelete(id)}
-      />
+      {/* Upcoming Events */}
+      <div className="w-full md:w-72 bg-white border border-slate-200 rounded-2xl p-5 flex flex-col">
+        <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-widest mb-4 shrink-0">
+          Upcoming
+        </h2>
+        <div className="overflow-y-auto flex-1 max-h-[540px] space-y-2 pr-1">
+          <EventList
+            events={upcomingEvents}
+            onEdit={(event) => {
+              setEditingEvent(event);
+              setSelectedDate(event.date);
+            }}
+            onDelete={(id) => handleDelete(id)}
+          />
+        </div>
+      </div>
     </div>
   );
 }

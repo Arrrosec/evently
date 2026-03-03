@@ -7,45 +7,40 @@ interface Props {
   onDelete?: (eventId: string) => void;
 }
 
-export default function EventList({ events, onEdit, onDelete }: Props) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // normalize to start of today
+const CATEGORY_STYLE: Record<string, { accent: string; label: string }> = {
+  meeting:    { accent: "#3b82f6", label: "Meeting" },
+  conference: { accent: "#22c55e", label: "Conference" },
+  reminder:   { accent: "#f59e0b", label: "Reminder" },
+  personal:   { accent: "#a855f7", label: "Personal" },
+};
 
-  // Filter upcoming events and sort by date
-  const upcomingEvents = [...events]
-    .filter((e) => new Date(e.date).setHours(0, 0, 0, 0) >= today.getTime())
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+export default function EventList({ events, onEdit, onDelete }: Props) {
+  if (events.length === 0) {
+    return <p className="text-sm text-slate-400 text-center py-8">No upcoming events</p>;
+  }
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md w-full max-w-md">
-      <h3 className="text-lg font-semibold mb-2">Upcoming Events</h3>
-      <ul className="space-y-2">
-        {upcomingEvents.map((event) => (
+    <ul className="space-y-2">
+      {events.map((event) => {
+        const style = CATEGORY_STYLE[event.category] ?? { accent: "#94a3b8", label: event.category };
+        return (
           <li
             key={event.id}
-            className={`p-2 rounded flex justify-between items-center
-              ${
-                event.category === "meeting"
-                  ? "bg-blue-100"
-                  : event.category === "conference"
-                  ? "bg-green-100"
-                  : event.category === "reminder"
-                  ? "bg-yellow-100"
-                  : "bg-purple-100"
-              }`}
+            className="flex items-start gap-3 p-3 rounded-xl border border-slate-100 hover:border-slate-200 hover:bg-slate-50 transition-all group"
+            style={{ borderLeft: `3px solid ${style.accent}` }}
           >
-            <div>
-              <p className="font-semibold">{event.title}</p>
-              <p className="text-sm">
-                {new Date(event.date).toLocaleDateString()} | {event.location}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-slate-800 truncate">{event.title}</p>
+              <p className="text-xs text-slate-400 mt-0.5">
+                {new Date(event.date).toLocaleDateString("en-US", { month: "short", day: "numeric", weekday: "short" })}
               </p>
             </div>
 
-            <div className="flex gap-1">
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
               {onEdit && (
                 <button
                   onClick={() => onEdit(event)}
-                  className="px-2 py-1 text-white bg-blue-500 rounded text-sm"
+                  className="px-2 py-1 text-xs text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-all"
                 >
                   Edit
                 </button>
@@ -53,15 +48,15 @@ export default function EventList({ events, onEdit, onDelete }: Props) {
               {onDelete && (
                 <button
                   onClick={() => onDelete(event.id)}
-                  className="px-2 py-1 text-white bg-red-500 rounded text-sm"
+                  className="px-2 py-1 text-xs text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
                 >
                   Delete
                 </button>
               )}
             </div>
           </li>
-        ))}
-      </ul>
-    </div>
+        );
+      })}
+    </ul>
   );
 }

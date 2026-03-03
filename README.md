@@ -7,13 +7,12 @@ A clean, elegant event management app built with React, TypeScript, and Tailwind
 ## 📸 Screenshots
 
 > **Dashboard**
-> ![Dashboard Screenshot](./screenshots/dashboard.png)
+> ![Dashboard Screenshot](./src/assets//dashboard.png)
 
 > **New Event Modal**
-> ![Modal Screenshot](./screenshots/modal.png)
+> ![Modal Screenshot](./src/assets//modal.png)
 
-> **Category Filtering**
-> ![Filter Screenshot](./screenshots/filter.png)
+
 
 ---
 

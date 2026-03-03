@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# 📅 Event Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean, elegant event management app built with React, TypeScript, and Tailwind CSS. Designed for managing and visualising events with a polished, productivity-focused UI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📸 Screenshots
 
-## React Compiler
+> **Dashboard**
+> ![Dashboard Screenshot](./screenshots/dashboard.png)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+> **New Event Modal**
+> ![Modal Screenshot](./screenshots/modal.png)
 
-## Expanding the ESLint configuration
+> **Category Filtering**
+> ![Filter Screenshot](./screenshots/filter.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🔗 Live Demo
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+[→ View Live](https://your-live-link-here.com)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ✨ Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- 📆 Full monthly calendar view powered by FullCalendar
+- 🏷️ Four event categories — Meeting, Conference, Reminder, Personal
+- 🎨 Color-coded events with left-border accent style
+- 🔍 Toolbar category filter with instant updates
+- ➕ Add events via toolbar or by clicking any calendar date
+- ✏️ Edit and delete events inline
+- 📋 Upcoming events sidebar with hover actions
+- 💅 Fully responsive, light-mode UI
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 🛠️ Tech Stack
+
+- [React 18](https://react.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [Vite](https://vitejs.dev)
+- [Tailwind CSS](https://tailwindcss.com)
+- [FullCalendar](https://fullcalendar.io)
+
+---
+
+## ⚖️ License
+
+Copyright © 2026. All rights reserved. This project is proprietary — see [`LICENSE`](./LICENSE) for full terms.

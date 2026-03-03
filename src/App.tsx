@@ -22,9 +22,12 @@ export default function App() {
 
       {/* Header */}
       <header className="w-full bg-white border-b border-slate-200 px-8 py-5">
-        <div className="max-w-6xl mx-auto flex items-end justify-between">
-          <div>
-            <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Event Manager</h1>
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src="../public/logo.png" alt="Logo" className="w-10 h-10 object-contain shrink-0" />
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Event Manager</h1>
+            </div>
           </div>
           <p className="text-sm text-slate-400">
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
